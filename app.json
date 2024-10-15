@@ -1,7 +1,7 @@
 {
     "expo": {
-        "name": "HDP Lite",
-        "slug": "hdp-lite",
+        "name": "Qarz daftari",
+        "slug": "qarz-daftari",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
@@ -20,7 +20,7 @@
                 "backgroundColor": "#ffffff"
             },
             "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
-            "package": "com.nnazirov.hdplite"
+            "package": "com.nnazirov.qarzdaftari"
         },
         "web": {
             "favicon": "./assets/favicon.png"

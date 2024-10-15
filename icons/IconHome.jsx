@@ -1,13 +1,6 @@
 import Svg, { G, Path } from "react-native-svg";
 const IconHome = (props) => (
-    <Svg
-        width="16px"
-        height="16px"
-        viewBox="-0.5 0 34 34"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        {...props}
-    >
+    <Svg width="16px" height="16px" viewBox="-0.5 0 34 34" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" {...props}>
         <G id="icons" stroke="none" strokeWidth={1} fill={props.fill || "#000"} fillRule="evenodd">
             <G
                 id="ui-gambling-website-lined-icnos-casinoshunter"

@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    number: '',
+    number: "",
     category: [],
     status: [],
     priceRange: [],
@@ -10,7 +10,7 @@ const initialState = {
 };
 
 const mySlice = createSlice({
-    name: 'prevFilter',
+    name: "prevFilter",
     initialState,
     reducers: {
         updatePrevFilter: (state, action) => {

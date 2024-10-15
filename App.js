@@ -23,16 +23,8 @@ axios.interceptors.request.use((config) => {
 export default function App() {
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener((state) => {
-            if (!state.isConnected) {
-                Alert.alert("No Internet!", "Please reconnect!", [
-                    {
-                        text: "Reload App",
-                        onPress: () => RNRestart.restart(),
-                    },
-                ]);
-            }
+            if (!state.isConnected) Alert.alert("No Internet!", "Please reconnect!", [{ text: "Reload App", onPress: () => RNRestart.restart() }]);
         });
-
         return () => {
             unsubscribe();
         };

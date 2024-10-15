@@ -1,31 +1,48 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack"; // Stack Navigator
+import { createStackNavigator } from "@react-navigation/stack";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import CalendarScreen from "../screens/CalendarScreen";
 import LogoutScreen from "../screens/LogoutScreen";
-import SearchScreen from "../screens/SearchScreen"; // Search sahifasi
+import SearchScreen from "../screens/SearchScreen";
 import IconCalendar from "../icons/IconCalendar";
 import IconAvatar from "../icons/IconAvatar";
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator(); // Stack Navigator yaratish
+const Stack = createStackNavigator();
+
+function ProfileStackNavigator() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name="Profile"
+                component={LogoutScreen}
+                options={({ navigation }) => ({
+                    headerTitle: "Profile",
+                    headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
+                    headerTintColor: "#ffffff",
+                    headerRight: () => (
+                        <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+                            <IconAvatar fill="#ffff00" style={{ marginRight: 15 }} />
+                        </TouchableOpacity>
+                    ),
+                })}
+            />
+            <Stack.Screen name="Search" component={SearchScreen} />
+        </Stack.Navigator>
+    );
+}
 
 function HomeDrawerNavigator() {
     return (
         <Tab.Navigator
             initialRouteName="Kalendar"
-            screenOptions={({ navigation }) => ({
+            screenOptions={{
                 tabBarStyle: styles.container,
                 tabBarShowLabel: false,
                 headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                 headerTintColor: "#ffffff",
-                headerRight: () => (
-                    <TouchableOpacity onPress={() => navigation.navigate("Search")}>
-                        <IconAvatar fill="#ffffff" style={{ marginRight: 15 }} />
-                    </TouchableOpacity>
-                ),
-            })}
+            }}
         >
             <Tab.Screen
                 name="Kalendar"
@@ -42,8 +59,9 @@ function HomeDrawerNavigator() {
 
             <Tab.Screen
                 name="Profile"
-                component={LogoutScreen}
+                component={ProfileStackNavigator}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ focused }) => (
                         <View style={{ alignItems: "center", justifyContent: "center" }}>
                             <IconAvatar fill={focused ? "#339eff" : "#a9a9a9"} />
@@ -53,16 +71,6 @@ function HomeDrawerNavigator() {
                 }}
             />
         </Tab.Navigator>
-    );
-}
-
-// Stack Navigatorni o'rnatish
-function AppNavigator() {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="HomeTabs" component={HomeDrawerNavigator} options={{ headerShown: false }} />
-            <Stack.Screen name="Search" component={SearchScreen} />
-        </Stack.Navigator>
     );
 }
 
@@ -77,4 +85,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AppNavigator;
+export default HomeDrawerNavigator;

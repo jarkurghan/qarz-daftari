@@ -7,7 +7,7 @@ import { Text, TextInput, View } from "react-native";
 import { setToken } from "../../store/token";
 import axios from "axios";
 
-export default function LoginForm() {
+export default function LoginForm({ navigation }) {
     const dispatch = useDispatch();
     const alert = useSelector(getAlert);
     const [click, setClick] = useState(false);
@@ -24,7 +24,7 @@ export default function LoginForm() {
                 dispatch(closeAlert());
             })
             .catch((err) => {
-                const text = "Login filled!";
+                const text = "Login failed!";
                 dispatch(openWarning({ text }));
             });
     };
@@ -63,10 +63,20 @@ export default function LoginForm() {
                 </View> */}
             </View>
 
-            <View style={styles.buttonView}>
-                <Pressable style={styles.button} onPress={onSubmit} disabled={alert.spinner}>
-                    <Text style={styles.buttonText}>LOGIN</Text>
-                </Pressable>
+            <View style={styles.submitView}>
+                <View style={styles.buttonView}>
+                    <Pressable style={styles.button} onPress={onSubmit} disabled={alert.spinner}>
+                        <Text style={styles.buttonText}>LOGIN</Text>
+                    </Pressable>
+                </View>
+
+                {/* Sign Up Text */}
+                <View style={styles.signUpView}>
+                    <Text style={styles.signUpText}>Don't have an account? </Text>
+                    <Pressable onPress={() => navigation.navigate("signup")}>
+                        <Text style={styles.signUpLink}>Sign Up</Text>
+                    </Pressable>
+                </View>
             </View>
         </SafeAreaView>
     );
@@ -74,10 +84,12 @@ export default function LoginForm() {
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        flex: 1,
         backgroundColor: "#fff",
         alignItems: "center",
-        paddingTop: 140,
+        justifyContent: "center",
+        gap: 20,
+        paddingBottom: 40,
     },
     title: {
         fontSize: 30,
@@ -100,23 +112,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 7,
     },
-    rememberView: {
+    submitView: {
+        width: "100%",
+    },
+    buttonView: {
         width: "100%",
         paddingHorizontal: 40,
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexDirection: "row",
-        marginBottom: 28,
-        // marginTop: 20,
-    },
-    switch: {
-        flexDirection: "row",
-        gap: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    rememberText: {
-        fontSize: 13,
     },
     button: {
         backgroundColor: "rgb(25, 118, 210)",
@@ -132,8 +133,19 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
     },
-    buttonView: {
-        width: "100%",
-        paddingHorizontal: 40,
+    signUpView: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 20,
+    },
+    signUpText: {
+        fontSize: 14,
+        color: "#555",
+    },
+    signUpLink: {
+        fontSize: 14,
+        color: "rgb(25, 118, 210)",
+        fontWeight: "bold",
     },
 });

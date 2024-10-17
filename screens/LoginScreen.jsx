@@ -1,8 +1,8 @@
 import React from "react";
 import LoginComponents from "../components/Login/Login";
 
-function LoginScreen() {
-    return <LoginComponents />;
+function LoginScreen({ navigation }) {
+    return <LoginComponents navigation={navigation} />;
 }
 
 export default LoginScreen;

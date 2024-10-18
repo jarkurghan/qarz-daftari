@@ -9,6 +9,7 @@ import IconAvatar from "../icons/IconAvatar";
 const Tab = createBottomTabNavigator();
 
 function HomeDrawerNavigator() {
+    //  to-do: bottom tab navigation shown
     return (
         <Tab.Navigator
             initialRouteName="Kalendar"

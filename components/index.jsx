@@ -30,7 +30,7 @@ export default function App() {
     return (
         <React.Fragment>
             {alert.visible && <Alert />}
-            {token ? <MainNavigator /> : alert.visible ? <View></View> : <LoginNavigator />}
+            <MainNavigator />
         </React.Fragment>
     );
 }

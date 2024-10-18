@@ -1,5 +1,5 @@
 import React from "react";
-import LogoutComponents from "../components/Logout/Logout";
+import LogoutComponents from "../components/Profile/Logout";
 
 function LogoutScreen() {
     return <LogoutComponents />;

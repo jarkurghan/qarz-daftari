@@ -73,7 +73,7 @@ export default function LoginForm({ navigation }) {
                 {/* Sign Up Text */}
                 <View style={styles.signUpView}>
                     <Text style={styles.signUpText}>Don't have an account? </Text>
-                    <Pressable onPress={() => navigation.navigate("signup")}>
+                    <Pressable onPress={() => navigation.navigate("SignUp")}>
                         <Text style={styles.signUpLink}>Sign Up</Text>
                     </Pressable>
                 </View>

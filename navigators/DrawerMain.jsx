@@ -5,16 +5,19 @@ import CalendarScreen from "../screens/CalendarScreen";
 import ProfileStackNavigator from "./StackProfile";
 import IconCalendar from "../icons/IconCalendar";
 import IconAvatar from "../icons/IconAvatar";
+import { getVisibleNav } from "../store/bottomnav";
+import { useSelector } from "react-redux";
 
 const Tab = createBottomTabNavigator();
 
 function HomeDrawerNavigator() {
-    //  to-do: bottom tab navigation shown
+    const isShowBottomNav = useSelector(getVisibleNav);
+
     return (
         <Tab.Navigator
             initialRouteName="Kalendar"
             screenOptions={{
-                tabBarStyle: styles.container,
+                tabBarStyle: isShowBottomNav ? styles.container : { display: "none" },
                 tabBarShowLabel: false,
                 headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                 headerTintColor: "#ffffff",

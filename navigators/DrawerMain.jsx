@@ -6,16 +6,20 @@ import ProfileStackNavigator from "./StackProfile";
 import IconCalendar from "../icons/IconCalendar";
 import IconAvatar from "../icons/IconAvatar";
 import { getVisibleNav } from "../store/bottomnav";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getActiveJournal, getJournal, setActiveJournal } from "../store/journal";
 
 const Tab = createBottomTabNavigator();
 
 function HomeDrawerNavigator() {
+    const dispatch = useDispatch();
     const isShowBottomNav = useSelector(getVisibleNav);
+    const journals = useSelector(getJournal);
+    const active = useSelector(getActiveJournal);
 
     return (
         <Tab.Navigator
-            initialRouteName="Kalendar"
+            initialRouteName={active?.name}
             screenOptions={{
                 tabBarStyle: isShowBottomNav ? styles.container : { display: "none" },
                 tabBarShowLabel: false,
@@ -23,18 +27,24 @@ function HomeDrawerNavigator() {
                 headerTintColor: "#ffffff",
             }}
         >
-            <Tab.Screen
-                name="Kalendar"
-                component={CalendarScreen}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: "center", justifyContent: "center" }}>
-                            <IconCalendar fill={focused ? "#339eff" : "#a9a9a9"} />
-                            <Text style={{ color: focused ? "#339eff" : "#000" }}>Kalendar</Text>
-                        </View>
-                    ),
-                }}
-            />
+            {journals.map((journal) => (
+                <Tab.Screen
+                    key={journal.name}
+                    name={journal.name}
+                    component={CalendarScreen}
+                    options={() => {
+                        dispatch(setActiveJournal(journal));
+                        return {
+                            tabBarIcon: ({ focused }) => (
+                                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                                    <IconCalendar fill={focused ? "#339eff" : "#a9a9a9"} />
+                                    <Text style={{ color: focused ? "#339eff" : "#000" }}>{journal.name}</Text>
+                                </View>
+                            ),
+                        };
+                    }}
+                />
+            ))}
 
             <Tab.Screen
                 name="Profile"

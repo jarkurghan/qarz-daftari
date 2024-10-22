@@ -1,13 +1,13 @@
 import React from "react";
 import LogoutComponents from "../components/Profile/Logout";
 import LoginComponents from "../components/Profile/Login";
+import { getIsAuthenticatedUser } from "../store/isAuthenticatedUser";
 import { useSelector } from "react-redux";
-import { getToken } from "../store/token";
 
 function ProfileScreen({ navigation }) {
-    const token = useSelector(getToken);
+    const isAuthenticatedUser = useSelector(getIsAuthenticatedUser);
 
-    return token === null ? <LoginComponents navigation={navigation} /> : <LogoutComponents navigation={navigation} />;
+    return isAuthenticatedUser ? <LogoutComponents navigation={navigation} /> : <LoginComponents navigation={navigation} />;
 }
 
 export default ProfileScreen;

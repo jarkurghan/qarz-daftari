@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getToken, setToken } from "../store/token";
+import { setToken } from "../store/token";
 import { closeAlert, getAlert } from "../store/alert";
 import { useDispatch, useSelector } from "react-redux";
 import { setJournal } from "../store/journal";
@@ -9,6 +9,7 @@ import Alert from "./Overlay/Alert";
 import axios from "axios";
 import { setActiveJournal } from "../store/activeJournal";
 import { hideNav } from "../store/bottomnav";
+import { setIsAuthenticatedUser } from "../store/isAuthenticatedUser";
 
 export default function App() {
     const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function App() {
                 const res = await axios.get("http://192.168.1.11:1009/qd/v1/api/auth/access", { headers: { Authorization: `Bearer ${value}` } });
                 await AsyncStorage.setItem("token", res.data.token);
                 dispatch(setToken(res.data.token));
+                dispatch(setIsAuthenticatedUser(res.data.authenticatedUser));
                 dispatch(setActiveJournal(res.data.journals[0]));
                 if (res.data.journals.length < 2) dispatch(hideNav());
                 dispatch(setJournal(res.data.journals));

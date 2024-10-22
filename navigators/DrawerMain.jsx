@@ -9,7 +9,6 @@ import { getJournal } from "../store/journal";
 import { useNavigation } from "@react-navigation/native";
 import { getActiveJournal, setActiveJournal } from "../store/activeJournal";
 import IconFontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import IconIonicons from "react-native-vector-icons/Ionicons";
 const Tab = createBottomTabNavigator();
 
 function HomeDrawerNavigator() {
@@ -44,14 +43,8 @@ function HomeDrawerNavigator() {
                 component={ProfileStackNavigator}
                 options={{
                     tabBarButton: () => null,
-                    headerShown: true,
+                    headerShown: false,
                     tabBarVisible: false,
-                    headerTitle: "Profil",
-                    headerLeft: () => (
-                        <TouchableOpacity onPress={() => navigation.navigate(active.name)} style={{ paddingLeft: 10 }}>
-                            <IconIonicons name="arrow-back" size={25} color="#fff" />
-                        </TouchableOpacity>
-                    ),
                 }}
             />
             {journals.map((journal) => (

@@ -4,12 +4,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../store/token";
 
-export default function LogoutComponents({navigation}) {
+export default function LogoutComponents({ navigation }) {
     const dispatch = useDispatch();
 
     const logout = async () => {
         console.log(1);
-        
+
         await AsyncStorage.clear();
         dispatch(setToken(null));
         // () => navigation.navigate("Login")

@@ -9,12 +9,15 @@ import SignUpScreen from "../screens/SignUpScreen";
 import { hideNav, showNav } from "../store/bottomnav";
 import { useDispatch, useSelector } from "react-redux";
 import { getJournal } from "../store/journal";
+import IconIonicons from "react-native-vector-icons/Ionicons";
+import { getActiveJournal } from "../store/activeJournal";
 
 const Stack = createStackNavigator();
 
 function ProfileStackNavigator() {
     const dispatch = useDispatch();
     const journals = useSelector(getJournal);
+    const active = useSelector(getActiveJournal);
 
     return (
         <Stack.Navigator>
@@ -24,9 +27,14 @@ function ProfileStackNavigator() {
                 options={({ navigation }) => {
                     if (journals.length > 1) dispatch(showNav());
                     return {
-                        headerShown: false,
+                        headerTitle: "Profil",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
+                        headerLeft: () => (
+                            <TouchableOpacity onPress={() => navigation.navigate(active.name)} style={{ paddingLeft: 10 }}>
+                                <IconIonicons name="arrow-back" size={25} color="#fff" />
+                            </TouchableOpacity>
+                        ),
                         headerRight: () => (
                             <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ marginRight: 15 }}>
                                 <IconAntDesign name="setting" size={24} color="white" />

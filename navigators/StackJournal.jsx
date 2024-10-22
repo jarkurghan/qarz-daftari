@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 const Stack = createStackNavigator();
 
 function JournalStackNavigator() {
+    // to-do: endi qilinadi
     const dispatch = useDispatch();
 
     return (
@@ -20,7 +21,7 @@ function JournalStackNavigator() {
                 name="Profile"
                 component={ProfileScreen}
                 options={({ navigation }) => {
-                    dispatch(showNav());
+                    if (journals.length > 1) dispatch(showNav());
                     return {
                         headerTitle: "Profil",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
@@ -30,19 +31,19 @@ function JournalStackNavigator() {
                                 <IconAntDesign name="setting" size={20} color="white" />
                             </TouchableOpacity>
                         ),
-                    }
+                    };
                 }}
             />
             <Stack.Screen
                 name="Settings"
                 component={SearchScreen}
                 options={() => {
-                    dispatch(showNav());
+                    if (journals.length > 1) dispatch(showNav());
                     return {
                         headerTitle: "Sozlamalar",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
-                    }
+                    };
                 }}
             />
             <Stack.Screen
@@ -54,7 +55,7 @@ function JournalStackNavigator() {
                         headerTitle: "Login",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
-                    }
+                    };
                 }}
             />
             <Stack.Screen
@@ -66,7 +67,7 @@ function JournalStackNavigator() {
                         headerTitle: "Ro'yxatdan o'tish",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
-                    }
+                    };
                 }}
             />
         </Stack.Navigator>

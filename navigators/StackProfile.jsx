@@ -7,12 +7,14 @@ import ProfileScreen from "../screens/ProfileScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import { hideNav, showNav } from "../store/bottomnav";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getJournal } from "../store/journal";
 
 const Stack = createStackNavigator();
 
 function ProfileStackNavigator() {
     const dispatch = useDispatch();
+    const journals = useSelector(getJournal);
 
     return (
         <Stack.Navigator>
@@ -20,29 +22,29 @@ function ProfileStackNavigator() {
                 name="Profile"
                 component={ProfileScreen}
                 options={({ navigation }) => {
-                    dispatch(showNav());
+                    if (journals.length > 1) dispatch(showNav());
                     return {
                         headerTitle: "Profil",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
                         headerRight: () => (
                             <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ marginRight: 15 }}>
-                                <IconAntDesign name="setting" size={20} color="white" />
+                                <IconAntDesign name="setting" size={24} color="white" />
                             </TouchableOpacity>
                         ),
-                    }
+                    };
                 }}
             />
             <Stack.Screen
                 name="Settings"
                 component={SearchScreen}
                 options={() => {
-                    dispatch(showNav());
+                    if (journals.length > 1) dispatch(showNav());
                     return {
                         headerTitle: "Sozlamalar",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
-                    }
+                    };
                 }}
             />
             <Stack.Screen
@@ -54,7 +56,7 @@ function ProfileStackNavigator() {
                         headerTitle: "Login",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
-                    }
+                    };
                 }}
             />
             <Stack.Screen
@@ -66,7 +68,7 @@ function ProfileStackNavigator() {
                         headerTitle: "Ro'yxatdan o'tish",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
-                    }
+                    };
                 }}
             />
         </Stack.Navigator>

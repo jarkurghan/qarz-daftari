@@ -1,15 +1,14 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import CalendarScreen from "../screens/CalendarScreen";
 import ProfileStackNavigator from "./StackProfile";
-import IconCalendar from "../icons/IconCalendar";
-import IconAvatar from "../icons/IconAvatar";
 import { getVisibleNav } from "../store/bottomnav";
 import { useDispatch, useSelector } from "react-redux";
 import { getJournal } from "../store/journal";
+import { useNavigation } from "@react-navigation/native";
 import { getActiveJournal, setActiveJournal } from "../store/activeJournal";
-
+import IconFontAwesome5 from "react-native-vector-icons/FontAwesome5";
 const Tab = createBottomTabNavigator();
 
 function HomeDrawerNavigator() {
@@ -17,17 +16,37 @@ function HomeDrawerNavigator() {
     const isShowBottomNav = useSelector(getVisibleNav);
     const journals = useSelector(getJournal);
     const active = useSelector(getActiveJournal);
+    const initialRoute = active.name;
+    const navigation = useNavigation();
+
+    React.useEffect(() => {
+        console.log(initialRoute);
+    }, [initialRoute]);
 
     return (
         <Tab.Navigator
-            initialRouteName={active?.name}
+            initialRouteName={initialRoute}
             screenOptions={{
                 tabBarStyle: isShowBottomNav ? styles.container : { display: "none" },
                 tabBarShowLabel: false,
                 headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                 headerTintColor: "#ffffff",
+                headerRight: () => (
+                    <TouchableOpacity onPress={() => navigation.navigate("Profile")} style={{ paddingRight: 12 }}>
+                        <IconFontAwesome5 name="user-circle" size={24} color="white" />
+                    </TouchableOpacity>
+                ),
             }}
         >
+            <Tab.Screen
+                name="Profile"
+                component={ProfileStackNavigator}
+                options={{
+                    tabBarButton: () => null,
+                    headerShown: false,
+                    tabBarVisible: false,
+                }}
+            />
             {journals.map((journal) => (
                 <Tab.Screen
                     key={journal.name}
@@ -38,7 +57,7 @@ function HomeDrawerNavigator() {
                         return {
                             tabBarIcon: ({ focused }) => (
                                 <View style={{ alignItems: "center", justifyContent: "center" }}>
-                                    <IconCalendar fill={focused ? "#339eff" : "#a9a9a9"} />
+                                    <IconFontAwesome5 name="clipboard-list" size={24} color="white" />
                                     <Text style={{ color: focused ? "#339eff" : "#000" }}>{journal.name}</Text>
                                 </View>
                             ),
@@ -46,20 +65,6 @@ function HomeDrawerNavigator() {
                     }}
                 />
             ))}
-
-            <Tab.Screen
-                name="Profile"
-                component={ProfileStackNavigator}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: "center", justifyContent: "center" }}>
-                            <IconAvatar fill={focused ? "#339eff" : "#a9a9a9"} />
-                            <Text style={{ color: focused ? "#339eff" : "#000" }}>Profile</Text>
-                        </View>
-                    ),
-                }}
-            />
         </Tab.Navigator>
     );
 }

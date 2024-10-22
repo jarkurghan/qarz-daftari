@@ -24,7 +24,7 @@ function ProfileStackNavigator() {
                 options={({ navigation }) => {
                     if (journals.length > 1) dispatch(showNav());
                     return {
-                        headerTitle: "Profil",
+                        headerShown: false,
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
                         headerRight: () => (

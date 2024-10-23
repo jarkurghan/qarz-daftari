@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { setToken } from "../store/token";
-import { closeAlert, getAlert } from "../store/alert";
+import { closeAlert, getAlert, openSpinner, openWarning } from "../store/alert";
 import { useDispatch, useSelector } from "react-redux";
 import { setJournal } from "../store/journal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,6 +15,7 @@ export default function App() {
     const dispatch = useDispatch();
     const alert = useSelector(getAlert);
     const [loading, setLoading] = useState(true);
+    const [isTokenExpired, setIsTokenExpired] = useState(false);
 
     const checkToken = async () => {
         try {
@@ -38,6 +39,11 @@ export default function App() {
             setLoading(false);
             dispatch(closeAlert());
         } catch (error) {
+            if (error.status === 499) {
+                const text = "6 oy mobaynida app faol bo'lmagani uchun ba'zi ma'lumotlar tozalanadi!";
+                dispatch(openWarning({ text }));
+                setIsTokenExpired(true);
+            }
             console.log(error);
         }
     };
@@ -45,6 +51,17 @@ export default function App() {
     useEffect(() => {
         checkToken();
     }, []);
+
+    const logout = async () => {
+        setIsTokenExpired(false);
+        dispatch(openSpinner());
+        await AsyncStorage.clear();
+        await checkToken();
+    };
+
+    useEffect(() => {
+        if (alert.visible === false && isTokenExpired) logout();
+    }, [alert]);
 
     return (
         <React.Fragment>

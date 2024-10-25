@@ -20,21 +20,6 @@ axios.interceptors.request.use((config) => {
     return config;
 });
 
-// axios.interceptors.response.use(
-//     (response) => {
-//         const newToken = response.data.data?.refreshToken;
-//         if (newToken) {
-//             delete response.data.data?.refreshToken;
-//             sessionStorage.setItem("token", newToken);
-//         }
-//         return response;
-//     },
-//     (error) => {
-//         if (error?.response?.status === 499) return logout();
-//         return Promise.reject(error);
-//     }
-// );
-
 export default function App() {
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener((state) => {

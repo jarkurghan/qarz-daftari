@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import CalendarScreen from "../screens/CalendarScreen";
+import JournalScreen from "../screens/JournalScreen";
 import ProfileStackNavigator from "./StackProfile";
 import { getVisibleNav } from "../store/bottomnav";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,11 +47,29 @@ function HomeDrawerNavigator() {
                     tabBarVisible: false,
                 }}
             />
+            <Tab.Screen
+                name="AddDebt"
+                component={JournalScreen}
+                options={{
+                    tabBarButton: () => null,
+                    headerShown: false,
+                    tabBarVisible: false,
+                }}
+            />
+            <Tab.Screen
+                name="JournalSettings"
+                component={ProfileStackNavigator}
+                options={{
+                    tabBarButton: () => null,
+                    headerShown: false,
+                    tabBarVisible: false,
+                }}
+            />
             {journals.map((journal) => (
                 <Tab.Screen
                     key={journal.name}
                     name={journal.name}
-                    component={CalendarScreen}
+                    component={JournalScreen}
                     options={() => {
                         dispatch(setActiveJournal(journal));
                         return {

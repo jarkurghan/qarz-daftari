@@ -8,6 +8,7 @@ import journal from "./journal";
 import visibleBottomNavigation from "./bottomnav";
 import activeJournal from "./activeJournal";
 import isAuthenticatedUser from "./isAuthenticatedUser";
+import journalValidation from "./journalValidation";
 
 export const store = configureStore({
     reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
         timeClock,
         visibleBottomNavigation,
         isAuthenticatedUser,
+        journalValidation,
     },
 });

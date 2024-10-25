@@ -2,10 +2,10 @@ import React from "react";
 import { Text } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-export default function JournalComponent() {
+export default function CreateDebtPage() {
     return (
         <View style={styles.container}>
-            <Text>Journal page</Text>
+            <Text>Create page</Text>
         </View>
     );
 }

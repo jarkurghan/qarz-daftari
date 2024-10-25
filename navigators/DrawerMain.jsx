@@ -9,6 +9,9 @@ import { getJournal } from "../store/journal";
 import { useNavigation } from "@react-navigation/native";
 import { getActiveJournal, setActiveJournal } from "../store/activeJournal";
 import IconFontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import IconAntDesign from "react-native-vector-icons/AntDesign";
+import IconIonicons from "react-native-vector-icons/Ionicons";
+import CreateDebtScreen from "../screens/CreateDebtScreen";
 const Tab = createBottomTabNavigator();
 
 function HomeDrawerNavigator() {
@@ -19,22 +22,23 @@ function HomeDrawerNavigator() {
     const initialRoute = active.name;
     const navigation = useNavigation();
 
-    React.useEffect(() => {
-        console.log(initialRoute);
-    }, [initialRoute]);
-
     return (
         <Tab.Navigator
             initialRouteName={initialRoute}
             screenOptions={{
-                tabBarStyle: isShowBottomNav ? styles.container : { display: "none" },
+                tabBarStyle: isShowBottomNav ? styles.bottomNav : { display: "none" },
                 tabBarShowLabel: false,
                 headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                 headerTintColor: "#ffffff",
                 headerRight: () => (
-                    <TouchableOpacity onPress={() => navigation.navigate("Profile")} style={{ paddingRight: 10 }}>
-                        <IconFontAwesome5 name="user-circle" size={24} color="white" />
-                    </TouchableOpacity>
+                    <View style={styles.headerIcons}>
+                        <TouchableOpacity onPress={() => navigation.navigate("AddDebt")}>
+                            <IconAntDesign name="pluscircleo" size={25} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+                            <IconFontAwesome5 name="user-circle" size={25} color="#e5f8dc" />
+                        </TouchableOpacity>
+                    </View>
                 ),
             }}
         >
@@ -49,20 +53,17 @@ function HomeDrawerNavigator() {
             />
             <Tab.Screen
                 name="AddDebt"
-                component={JournalScreen}
+                component={CreateDebtScreen}
                 options={{
                     tabBarButton: () => null,
-                    headerShown: false,
+                    headerShown: true,
                     tabBarVisible: false,
-                }}
-            />
-            <Tab.Screen
-                name="JournalSettings"
-                component={ProfileStackNavigator}
-                options={{
-                    tabBarButton: () => null,
-                    headerShown: false,
-                    tabBarVisible: false,
+                    headerRight: () => null,
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={() => navigation.navigate(active.name)} style={{ paddingLeft: 10 }}>
+                            <IconIonicons name="arrow-back" size={25} color="#fff" />
+                        </TouchableOpacity>
+                    ),
                 }}
             />
             {journals.map((journal) => (
@@ -75,7 +76,7 @@ function HomeDrawerNavigator() {
                         return {
                             tabBarIcon: ({ focused }) => (
                                 <View style={{ alignItems: "center", justifyContent: "center" }}>
-                                    <IconFontAwesome5 name="clipboard-list" size={24} color="white" />
+                                    <IconFontAwesome5 name="clipboard-list" size={25} color="white" />
                                     <Text style={{ color: focused ? "#339eff" : "#000" }}>{journal.name}</Text>
                                 </View>
                             ),
@@ -88,13 +89,18 @@ function HomeDrawerNavigator() {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    bottomNav: {
         position: "absolute",
         borderRadius: 10,
         left: 4,
         right: 4,
         bottom: 6,
         boxShadow: "1px 3px 20px -1px rgba(0,0,0,0.6)",
+    },
+    headerIcons: {
+        paddingRight: 10,
+        gap: 15,
+        flexDirection: "row",
     },
 });
 

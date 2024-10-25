@@ -7,7 +7,6 @@ function JournalScreen({ navigation }) {
     return (
         <ScrollView>
             <JournalPageComponents />
-            <AddDebtComponent navigation={navigation} />
         </ScrollView>
     );
 }

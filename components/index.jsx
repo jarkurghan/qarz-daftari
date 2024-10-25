@@ -10,6 +10,7 @@ import axios from "axios";
 import { setActiveJournal } from "../store/activeJournal";
 import { hideNav } from "../store/bottomnav";
 import { setIsAuthenticatedUser } from "../store/isAuthenticatedUser";
+import makerValidator from "../services/getValidations";
 
 export default function App() {
     const dispatch = useDispatch();
@@ -28,6 +29,7 @@ export default function App() {
                 dispatch(setActiveJournal(res.data.journals[0]));
                 if (res.data.journals.length < 2) dispatch(hideNav());
                 dispatch(setJournal(res.data.journals));
+                await makerValidator(res.data.journals, res.data.token);
             } else {
                 const res = await axios.post("http://192.168.1.2:1009/qd/v1/api/auth/create-account", {});
                 await AsyncStorage.setItem("token", res.data.token);
@@ -35,6 +37,7 @@ export default function App() {
                 dispatch(setActiveJournal(res.data.journals[0]));
                 if (res.data.journals.length < 2) dispatch(hideNav());
                 dispatch(setJournal(res.data.journals));
+                await makerValidator(res.data.journals, res.data.token);
             }
             setLoading(false);
             dispatch(closeAlert());

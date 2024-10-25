@@ -37,7 +37,7 @@ function ProfileStackNavigator() {
                         ),
                         headerRight: () => (
                             <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ marginRight: 15 }}>
-                                <IconAntDesign name="setting" size={24} color="white" />
+                                <IconAntDesign name="setting" size={25} color="white" />
                             </TouchableOpacity>
                         ),
                     };

@@ -7,17 +7,13 @@ import ProfileScreen from "../screens/ProfileScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import { hideNav, showNav } from "../store/bottomnav";
-import { useDispatch, useSelector } from "react-redux";
-import { getJournal } from "../store/journal";
-import IconIonicons from "react-native-vector-icons/Ionicons";
-import { getActiveJournal } from "../store/activeJournal";
+import { useDispatch } from "react-redux";
 
 const Stack = createStackNavigator();
 
-function ProfileStackNavigator() {
+function JournalStackNavigator() {
+    // to-do: endi qilinadi
     const dispatch = useDispatch();
-    const journals = useSelector(getJournal);
-    const active = useSelector(getActiveJournal);
 
     return (
         <Stack.Navigator>
@@ -30,14 +26,9 @@ function ProfileStackNavigator() {
                         headerTitle: "Profil",
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
-                        headerLeft: () => (
-                            <TouchableOpacity onPress={() => navigation.navigate(active.name)} style={{ paddingLeft: 10 }}>
-                                <IconIonicons name="arrow-back" size={25} color="#fff" />
-                            </TouchableOpacity>
-                        ),
                         headerRight: () => (
                             <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={{ marginRight: 15 }}>
-                                <IconAntDesign name="setting" size={25} color="white" />
+                                <IconAntDesign name="setting" size={20} color="white" />
                             </TouchableOpacity>
                         ),
                     };
@@ -83,4 +74,4 @@ function ProfileStackNavigator() {
     );
 }
 
-export default ProfileStackNavigator;
+export default JournalStackNavigator;

@@ -4,6 +4,23 @@ import token from "./token";
 import filter from "./filter";
 import prevFilter from "./prevFilter";
 import timeClock from "./timeClock";
+import journal from "./journal";
 import visibleBottomNavigation from "./bottomnav";
+import activeJournal from "./activeJournal";
+import isAuthenticatedUser from "./isAuthenticatedUser";
+import journalValidation from "./journalValidation";
 
-export const store = configureStore({ reducer: { alert: alert, token: token, filter, prevFilter, timeClock, visibleBottomNavigation } });
+export const store = configureStore({
+    reducer: {
+        alert,
+        token,
+        filter,
+        prevFilter,
+        journal,
+        activeJournal,
+        timeClock,
+        visibleBottomNavigation,
+        isAuthenticatedUser,
+        journalValidation,
+    },
+});

@@ -1,27 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import LogoutComponents from "../components/Profile/Logout";
 import LoginComponents from "../components/Profile/Login";
-import { useDispatch, useSelector } from "react-redux";
-import { getToken, setToken } from "../store/token";
+import { getIsAuthenticatedUser } from "../store/isAuthenticatedUser";
+import { useSelector } from "react-redux";
 
 function ProfileScreen({ navigation }) {
-    const dispatch = useDispatch();
-    const token = useSelector(getToken);
+    const isAuthenticatedUser = useSelector(getIsAuthenticatedUser);
 
-    const checkToken = async () => {
-        try {
-            const value = await AsyncStorage.getItem("token");
-            dispatch(setToken(value));
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        checkToken();
-    }, []);
-
-    return token === null ? <LoginComponents navigation={navigation} /> : <LogoutComponents navigation={navigation} />;
+    return isAuthenticatedUser ? <LogoutComponents navigation={navigation} /> : <LoginComponents navigation={navigation} />;
 }
 
 export default ProfileScreen;

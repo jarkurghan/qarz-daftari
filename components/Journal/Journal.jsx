@@ -2,10 +2,10 @@ import React from "react";
 import { Text } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-export default function CalendarComponents() {
+export default function JournalComponent() {
     return (
         <View style={styles.container}>
-            <Text>Calendar page</Text>
+            <Text>Journal page</Text>
         </View>
     );
 }

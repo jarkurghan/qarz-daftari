@@ -28,21 +28,19 @@ export default function CreateDebtPage() {
 
     useEffect(() => {
         const schema = { name: Yup.string().required("Matn kiriting!") };
-        // const form = {};
-        // if (response.addressable) {
-        //     if (response.address_required) schema.address = Yup.string().required("Address kitiring!");
-        //     else schema.address = Yup.string().optional();
-        // }
-        // if (response.phonable) {
-        //     if (response.phone_required) schema.phone = Yup.string().required("Telefon raqam kitiring!");
-        //     else schema.phone = Yup.string().optional();
-        // }
-        // if (response.folderable) {
-        //     schema.folder = Yup.string().optional();
-        // }
-        // const validationSchema = Yup.object().shape(schema);
-        // console.log();
-        console.log(value);
+        if (response.addressable) {
+            if (response.address_required) schema.address = Yup.string().required("Address kitiring!");
+            else schema.address = Yup.string().optional();
+        }
+        if (response.phonable) {
+            if (response.phone_required) schema.phone = Yup.string().required("Telefon raqam kitiring!");
+            else schema.phone = Yup.string().optional();
+        }
+        if (response.folderable) {
+            schema.folder = Yup.string().optional();
+        }
+        const validationSchema = Yup.object().shape(schema);
+        setValidation(validationSchema);
     }, [value]);
 
     return (

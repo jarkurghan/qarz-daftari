@@ -8,40 +8,56 @@ import * as Yup from "yup";
 
 const defaultSchema = Yup.object().shape({
     name: Yup.string().required("Matn kiriting!"),
-    // amount: Yup.string(), // Agar kerak bo'lsa, .nullable() yoki .required() qo'shishingiz mumkin
-    // date: Yup.date().nullable(), // Agar 'date' qiymati bo'sh bo'lishi mumkin bo'lsa
-    // address: Yup.string().nullable(), // Agar 'address' bo'sh bo'lishi mumkin bo'lsa
-    // phone: Yup.string().nullable(), // Agar 'phone' bo'sh bo'lishi mumkin bo'lsa
-    // folder: Yup.string().default("/").required("Folder is required"),
-    // debt_type: Yup.string().nullable(), // Agar 'debt_type' bo'sh bo'lishi mumkin bo'lsa
 });
 
 export default function CreateDebtPage() {
     const active = useSelector(getActiveJournal);
     const journalValidation = useSelector(getJournalValidation);
-    const [value, setValue] = useState({});
     const [validation, setValidation] = useState(defaultSchema);
 
     useEffect(() => {
-        setValue(journalValidation[active.name]);
-    }, [active]);
-
-    useEffect(() => {
+        const currentJournalVal = journalValidation[active.name];
         const schema = { name: Yup.string().required("Matn kiriting!") };
-        if (response.addressable) {
-            if (response.address_required) schema.address = Yup.string().required("Address kitiring!");
-            else schema.address = Yup.string().optional();
-        }
-        if (response.phonable) {
-            if (response.phone_required) schema.phone = Yup.string().required("Telefon raqam kitiring!");
-            else schema.phone = Yup.string().optional();
-        }
-        if (response.folderable) {
+
+        if (currentJournalVal.folderable) {
             schema.folder = Yup.string().optional();
         }
+
+        if (currentJournalVal.debt_type_required) schema.debt_type = Yup.string().required("Qaytarish vaqtini kitiring!");
+        else schema.debt_type = Yup.string().optional();
+
+        if (currentJournalVal.amount_type === "float") {
+            if (currentJournalVal.amount_required) {
+                schema.amount = Yup.number()
+                    .typeError("Bu son bo'lishi kerak")
+                    .moreThan(0, "Qarz miqdori ijobiy son bo'lishi kerak")
+                    .required("Qarz miqdorini kitiring!");
+            } else {
+                schema.amount = Yup.string().typeError("Bu son bo'lishi kerak").moreThan(0, "Qarz miqdori ijobiy son bo'lishi kerak").optional();
+            }
+        } else if (currentJournalVal.amount_type === "string") {
+            if (currentJournalVal.amount_required) {
+                schema.amount = Yup.number().required("Qarzni kitiring!");
+            } else {
+                schema.amount = Yup.string().optional();
+            }
+        }
+
+        if (currentJournalVal.date_required) schema.date = Yup.string().required("Qaytarish vaqtini kitiring!");
+        else schema.date = Yup.string().optional();
+
+        if (currentJournalVal.addressable) {
+            if (currentJournalVal.address_required) schema.address = Yup.string().required("Address kitiring!");
+            else schema.address = Yup.string().optional();
+        }
+        if (currentJournalVal.phonable) {
+            if (currentJournalVal.phone_required) schema.phone = Yup.string().required("Telefon raqam kitiring!");
+            else schema.phone = Yup.string().optional();
+        }
+
         const validationSchema = Yup.object().shape(schema);
         setValidation(validationSchema);
-    }, [value]);
+    }, [active]);
 
     return (
         <View style={styles.container}>

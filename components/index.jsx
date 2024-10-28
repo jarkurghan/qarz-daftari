@@ -46,8 +46,11 @@ export default function App() {
                 const text = "6 oy mobaynida app faol bo'lmagani uchun ba'zi ma'lumotlar tozalanadi!";
                 dispatch(openWarning({ text }));
                 setIsTokenExpired(true);
+            } else {
+                // to-do: bu yerda xato holati yoziladi
+                //        hozir (masalan) API ishlamasa spinner to'xtamay qolyapti
+                console.log(error);
             }
-            console.log(error);
         }
     };
 

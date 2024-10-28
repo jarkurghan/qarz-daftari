@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Text } from "react-native";
+import { Alert, Text } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { getActiveJournal } from "../../store/activeJournal";
 import { useSelector } from "react-redux";
 import { getJournalValidation } from "../../store/journalValidation";
 import * as Yup from "yup";
+import { Formik } from "formik";
+import { TextInput } from "react-native";
+import { Button } from "react-native";
 
 const defaultSchema = Yup.object().shape({
     name: Yup.string().required("Matn kiriting!"),
@@ -78,15 +81,78 @@ export default function CreateDebtPage() {
         setFormaShakli(formaShakli);
     }, [active]);
 
+    const onSubmit = (values) => {
+        Alert.alert("Forma muvaffaqiyatli yuborildi!", JSON.stringify(values));
+        // Bu yerda ma'lumotlarni qayta ishlash mumkin (API ga yuborish va h.k.)
+    };
+
     return (
         <View style={styles.container}>
-            <Text>Create page</Text>
+            {formaShakli && (
+                <Formik initialValues={initialValue} validationSchema={validation} onSubmit={onSubmit}>
+                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                        <View>
+                            <Text>Create Debt</Text>
+
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Name"
+                                onChangeText={handleChange("name")}
+                                onBlur={handleBlur("name")}
+                                value={values.name}
+                            />
+                            {errors.name && touched.name && <Text style={styles.error}>{errors.name}</Text>}
+
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Amount"
+                                keyboardType="numeric"
+                                onChangeText={handleChange("amount")}
+                                onBlur={handleBlur("amount")}
+                                value={values.amount.toString()}
+                            />
+                            {errors.amount && touched.amount && <Text style={styles.error}>{errors.amount}</Text>}
+
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Date"
+                                onChangeText={handleChange("date")}
+                                onBlur={handleBlur("date")}
+                                value={values.date}
+                            />
+                            {errors.date && touched.date && <Text style={styles.error}>{errors.date}</Text>}
+
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Debt Type"
+                                onChangeText={handleChange("debt_type")}
+                                onBlur={handleBlur("debt_type")}
+                                value={values.debt_type}
+                            />
+                            {errors.debt_type && touched.debt_type && <Text style={styles.error}>{errors.debt_type}</Text>}
+
+                            <Button title="Submit" onPress={handleSubmit} />
+                        </View>
+                    )}
+                </Formik>
+            )}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingBottom: 60,
+        padding: 20,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10,
+    },
+    error: {
+        color: "red",
+        marginBottom: 10,
     },
 });

@@ -8,6 +8,8 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import { TextInput } from "react-native";
 import { Button } from "react-native";
+import { RadioButton } from "react-native-paper";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 const defaultSchema = Yup.object().shape({
     name: Yup.string().required("Matn kiriting!"),
@@ -25,12 +27,13 @@ export default function CreateDebtPage() {
     const [validation, setValidation] = useState(defaultSchema);
     const [initialValue, setInitialValue] = useState(defaultValue);
     const [formaShakli, setFormaShakli] = useState(null);
+    const [showDateModal, setShowDateModal] = useState(false);
 
     useEffect(() => {
         const currentJournalVal = journalValidation[active.name];
-        const schema = { name: Yup.string().required("Matn kiriting!") };
+        const schema = { name: Yup.string().required("Nom kiriting!") };
         const value = { name: "", amount: 0, date: "", debt_type: "" };
-        const formaShakli = new Set(["name", "date", "amount", "debt_type"]);
+        const formaShakli = new Set(["name", "date", "debt_type"]);
 
         if (currentJournalVal.folderable) {
             schema.folder = Yup.string().optional();
@@ -43,15 +46,14 @@ export default function CreateDebtPage() {
         if (currentJournalVal.debt_type_default) value.debt_type = currentJournalVal.debt_type_default;
 
         if (currentJournalVal.amount_type === "float") {
+            formaShakli.add("amount-float");
             if (currentJournalVal.amount_required) {
-                schema.amount = Yup.number()
-                    .typeError("Bu son bo'lishi kerak")
-                    .moreThan(0, "Qarz miqdori ijobiy son bo'lishi kerak")
-                    .required("Qarz miqdorini kitiring!");
+                schema.amount = Yup.number().typeError("Bu son bo'lishi kerak").moreThan(0, "Qarz miqdori noto'g'ri").required("Qarz miqdorini kitiring!");
             } else {
-                schema.amount = Yup.string().typeError("Bu son bo'lishi kerak").moreThan(0, "Qarz miqdori ijobiy son bo'lishi kerak").optional();
+                schema.amount = Yup.string().typeError("Bu son bo'lishi kerak").optional();
             }
         } else if (currentJournalVal.amount_type === "string") {
+            formaShakli.add("amount-string");
             if (currentJournalVal.amount_required) {
                 schema.amount = Yup.number().required("Qarzni kitiring!");
             } else {
@@ -92,46 +94,113 @@ export default function CreateDebtPage() {
                 <Formik initialValues={initialValue} validationSchema={validation} onSubmit={onSubmit}>
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                         <View>
-                            <Text>Create Debt</Text>
+                            <Text style={styles.title}>Qarz qo'shish</Text>
 
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Name"
-                                onChangeText={handleChange("name")}
-                                onBlur={handleBlur("name")}
-                                value={values.name}
-                            />
-                            {errors.name && touched.name && <Text style={styles.error}>{errors.name}</Text>}
+                            {formaShakli.has("name") && (
+                                <React.Fragment>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Ism Familya, Falon do'kon yoki boshqa nom kiriting"
+                                        placeholderTextColor="#888"
+                                        onChangeText={handleChange("name")}
+                                        onBlur={handleBlur("name")}
+                                        value={values.name}
+                                    />
+                                    <Text style={[styles.error, { opacity: errors.name && touched.name ? 1 : 0 }]}>{errors.name}</Text>
+                                </React.Fragment>
+                            )}
 
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Amount"
-                                keyboardType="numeric"
-                                onChangeText={handleChange("amount")}
-                                onBlur={handleBlur("amount")}
-                                value={values.amount.toString()}
-                            />
-                            {errors.amount && touched.amount && <Text style={styles.error}>{errors.amount}</Text>}
+                            {formaShakli.has("amount-float") && (
+                                <React.Fragment>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Qarz miqdori"
+                                        placeholderTextColor="#888"
+                                        keyboardType="numeric"
+                                        onChangeText={handleChange("amount")}
+                                        onBlur={handleBlur("amount")}
+                                        value={values.amount.toString()}
+                                    />
+                                    <Text style={[styles.error, { opacity: errors.amount && touched.amount ? 1 : 0 }]}>{errors.amount}</Text>
+                                </React.Fragment>
+                            )}
 
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Date"
-                                onChangeText={handleChange("date")}
-                                onBlur={handleBlur("date")}
-                                value={values.date}
-                            />
-                            {errors.date && touched.date && <Text style={styles.error}>{errors.date}</Text>}
+                            {formaShakli.has("amount-string") && (
+                                <React.Fragment>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Qarz miqdori"
+                                        placeholderTextColor="#888"
+                                        onChangeText={handleChange("amount")}
+                                        onBlur={handleBlur("amount")}
+                                        value={values.amount}
+                                    />
+                                    <Text style={[styles.error, { opacity: errors.amount && touched.amount ? 1 : 0 }]}>{errors.amount}</Text>
+                                </React.Fragment>
+                            )}
 
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Debt Type"
-                                onChangeText={handleChange("debt_type")}
-                                onBlur={handleBlur("debt_type")}
-                                value={values.debt_type}
-                            />
-                            {errors.debt_type && touched.debt_type && <Text style={styles.error}>{errors.debt_type}</Text>}
+                            {/* to-do: date types */}
+                            {formaShakli.has("date") && (
+                                <React.Fragment>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Qaytarish vaqti"
+                                        onFocus={() => setShowDateModal(true)}
+                                        value={values.date ? values.date.toLocaleDateString() : ""}
+                                        editable={false}
+                                    />
+                                    {showDateModal && (
+                                        <DateTimePickerAndroid value={values.date} mode="date" is24Hour={true} display="default" onChange={handleChange("date")} />
+                                    )}
+                                    <Text style={[styles.error, { opacity: errors.date && touched.date ? 1 : 0 }]}>{errors.date}</Text>
+                                </React.Fragment>
+                            )}
 
-                            <Button title="Submit" onPress={handleSubmit} />
+                            {/* {formaShakli.has("phone") && ( */}
+                            <React.Fragment>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="+998901234567"
+                                    placeholderTextColor="#B0B0B0"
+                                    onChangeText={handleChange("phone")}
+                                    onBlur={handleBlur("phone")}
+                                    value={values.phone}
+                                    keyboardType="phone-pad"
+                                />
+                                <Text style={[styles.error, { opacity: errors.phone && touched.phone ? 1 : 0 }]}>{errors.phone}</Text>
+                            </React.Fragment>
+                            {/* )} */}
+
+                            {/* {formaShakli.has("address") && ( */}
+                            <React.Fragment>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Sh.Rashidov 10-uy, Dehqon bozor 10-do'kon yoki shunga o'xshash manzil"
+                                    placeholderTextColor="#888"
+                                    onChangeText={handleChange("address")}
+                                    onBlur={handleBlur("address")}
+                                    value={values.address}
+                                />
+                                <Text style={[styles.error, { opacity: errors.address && touched.address ? 1 : 0 }]}>{errors.address}</Text>
+                            </React.Fragment>
+                            {/* )} */}
+
+                            {formaShakli.has("debt_type") && (
+                                <React.Fragment>
+                                    <RadioButton.Group onValueChange={handleChange("debt_type")} value={values.debt_type}>
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <RadioButton value="mendan qarz" />
+                                            <Text>Mendan qarz</Text>
+                                        </View>
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <RadioButton value="maning qarzim" />
+                                            <Text>Mening qarzim</Text>
+                                        </View>
+                                    </RadioButton.Group>
+                                    <Text style={[styles.error, { opacity: errors.debt_type && touched.debt_type ? 1 : 0 }]}>{errors.debt_type}</Text>
+                                </React.Fragment>
+                            )}
+                            <Button title="Qo'shish" onPress={handleSubmit} />
                         </View>
                     )}
                 </Formik>
@@ -144,15 +213,31 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
     },
+    title: {
+        fontWeight: "500",
+        fontSize: 24,
+        textTransform: "uppercase",
+        color: "#333",
+        textAlign: "center",
+        paddingBottom: 20,
+    },
     input: {
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 5,
         padding: 10,
-        marginBottom: 10,
+        paddingHorizontal: 20,
+        // borderColor: "#007AFF",
+        borderWidth: 1,
+        borderRadius: 25,
+        backgroundColor: "#FFFFFF",
+        elevation: 2,
     },
     error: {
         color: "red",
         marginBottom: 10,
+        paddingLeft: 20,
+        height: 19,
+        textTransform: "lowercase",
     },
 });

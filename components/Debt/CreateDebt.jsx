@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text } from "react-native";
-import { StyleSheet, View } from "react-native";
-import { getActiveJournal } from "../../store/activeJournal";
-import { useSelector } from "react-redux";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Alert, Text, TouchableOpacity } from "react-native";
 import { getJournalValidation } from "../../store/journalValidation";
-import * as Yup from "yup";
-import { Formik } from "formik";
+import { getActiveJournal } from "../../store/activeJournal";
+import { TouchableWithoutFeedback } from "react-native";
+import { useSelector } from "react-redux";
 import { TextInput } from "react-native";
 import { Button } from "react-native";
 import { RadioButton } from "react-native-paper";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import { StyleSheet, View } from "react-native";
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 const defaultSchema = Yup.object().shape({
     name: Yup.string().required("Matn kiriting!"),
@@ -20,6 +21,8 @@ const defaultValue = {
     date: undefined,
     debt_type: undefined,
 };
+const yesterday = new Date();
+yesterday.setDate(new Date().getDate() - 1);
 
 export default function CreateDebtPage() {
     const active = useSelector(getActiveJournal);
@@ -83,6 +86,12 @@ export default function CreateDebtPage() {
         setFormaShakli(formaShakli);
     }, [active]);
 
+    const dateChangeHandler = (event, setValues, values) => {
+        if (new Date(event.nativeEvent.timestamp) > new Date()) values.date = new Date(event.nativeEvent.timestamp);
+        setShowDateModal(false);
+        setValues(values);
+    };
+
     const onSubmit = (values) => {
         Alert.alert("Forma muvaffaqiyatli yuborildi!", JSON.stringify(values));
         // Bu yerda ma'lumotlarni qayta ishlash mumkin (API ga yuborish va h.k.)
@@ -92,7 +101,7 @@ export default function CreateDebtPage() {
         <View style={styles.container}>
             {formaShakli && (
                 <Formik initialValues={initialValue} validationSchema={validation} onSubmit={onSubmit}>
-                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                    {({ handleChange, handleBlur, setValues, handleSubmit, values, errors, touched }) => (
                         <View>
                             <Text style={styles.title}>Qarz qo'shish</Text>
 
@@ -142,59 +151,71 @@ export default function CreateDebtPage() {
                             {/* to-do: date types */}
                             {formaShakli.has("date") && (
                                 <React.Fragment>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="Qaytarish vaqti"
-                                        onFocus={() => setShowDateModal(true)}
-                                        value={values.date ? values.date.toLocaleDateString() : ""}
-                                        editable={false}
-                                    />
                                     {showDateModal && (
-                                        <DateTimePickerAndroid value={values.date} mode="date" is24Hour={true} display="default" onChange={handleChange("date")} />
+                                        <DateTimePicker
+                                            value={values.date || yesterday}
+                                            mode="date"
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(e) => dateChangeHandler(e, setValues, values)}
+                                            minimumDate={new Date()}
+                                        />
                                     )}
+                                    <TouchableOpacity style={styles.formControl} onPress={() => setShowDateModal(true)}>
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Qaytarish vaqti"
+                                            value={values.date ? values.date.toLocaleDateString() : ""}
+                                            editable={false}
+                                        />
+                                    </TouchableOpacity>
                                     <Text style={[styles.error, { opacity: errors.date && touched.date ? 1 : 0 }]}>{errors.date}</Text>
                                 </React.Fragment>
                             )}
 
-                            {/* {formaShakli.has("phone") && ( */}
-                            <React.Fragment>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="+998901234567"
-                                    placeholderTextColor="#B0B0B0"
-                                    onChangeText={handleChange("phone")}
-                                    onBlur={handleBlur("phone")}
-                                    value={values.phone}
-                                    keyboardType="phone-pad"
-                                />
-                                <Text style={[styles.error, { opacity: errors.phone && touched.phone ? 1 : 0 }]}>{errors.phone}</Text>
-                            </React.Fragment>
-                            {/* )} */}
+                            {formaShakli.has("phone") && (
+                                <React.Fragment>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="+998901234567"
+                                        placeholderTextColor="#B0B0B0"
+                                        onChangeText={handleChange("phone")}
+                                        onBlur={handleBlur("phone")}
+                                        value={values.phone}
+                                        keyboardType="phone-pad"
+                                    />
+                                    <Text style={[styles.error, { opacity: errors.phone && touched.phone ? 1 : 0 }]}>{errors.phone}</Text>
+                                </React.Fragment>
+                            )}
 
-                            {/* {formaShakli.has("address") && ( */}
-                            <React.Fragment>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Sh.Rashidov 10-uy, Dehqon bozor 10-do'kon yoki shunga o'xshash manzil"
-                                    placeholderTextColor="#888"
-                                    onChangeText={handleChange("address")}
-                                    onBlur={handleBlur("address")}
-                                    value={values.address}
-                                />
-                                <Text style={[styles.error, { opacity: errors.address && touched.address ? 1 : 0 }]}>{errors.address}</Text>
-                            </React.Fragment>
-                            {/* )} */}
+                            {formaShakli.has("address") && (
+                                <React.Fragment>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Sh.Rashidov 10-uy, Dehqon bozor 10-do'kon yoki shunga o'xshash manzil"
+                                        placeholderTextColor="#888"
+                                        onChangeText={handleChange("address")}
+                                        onBlur={handleBlur("address")}
+                                        value={values.address}
+                                    />
+                                    <Text style={[styles.error, { opacity: errors.address && touched.address ? 1 : 0 }]}>{errors.address}</Text>
+                                </React.Fragment>
+                            )}
 
                             {formaShakli.has("debt_type") && (
                                 <React.Fragment>
                                     <RadioButton.Group onValueChange={handleChange("debt_type")} value={values.debt_type}>
                                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                                             <RadioButton value="mendan qarz" />
-                                            <Text>Mendan qarz</Text>
+                                            <TouchableWithoutFeedback onPress={() => handleChange("debt_type")("mendan qarz")}>
+                                                <Text>Mendan qarz</Text>
+                                            </TouchableWithoutFeedback>
                                         </View>
                                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                                             <RadioButton value="maning qarzim" />
-                                            <Text>Mening qarzim</Text>
+                                            <TouchableWithoutFeedback onPress={() => handleChange("debt_type")("maning qarzim")}>
+                                                <Text>Mening qarzim</Text>
+                                            </TouchableWithoutFeedback>
                                         </View>
                                     </RadioButton.Group>
                                     <Text style={[styles.error, { opacity: errors.debt_type && touched.debt_type ? 1 : 0 }]}>{errors.debt_type}</Text>
@@ -232,6 +253,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: "#FFFFFF",
         elevation: 2,
+        color: "#333",
     },
     error: {
         color: "red",

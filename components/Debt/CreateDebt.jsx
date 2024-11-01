@@ -96,6 +96,7 @@ export default function CreateDebtPage() {
 
     const onSubmit = async (values) => {
         try {
+            // to-do: spinner
             const data = { ...values, journal_id: active.id };
             const token = await AsyncStorage.getItem("token");
             const headers = { Authorization: `Bearer ${token}` };

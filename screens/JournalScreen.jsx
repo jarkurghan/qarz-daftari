@@ -5,7 +5,7 @@ import AddDebtComponent from "../components/Journal/AddDebt";
 
 function JournalScreen({ navigation }) {
     return (
-        <ScrollView>
+        <ScrollView style={{ flex: 1 }}>
             <JournalPageComponents />
         </ScrollView>
     );

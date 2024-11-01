@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert, Text, TouchableOpacity } from "react-native";
 import { getJournalValidation } from "../../store/journalValidation";
 import { getActiveJournal } from "../../store/activeJournal";
@@ -11,6 +12,7 @@ import { RadioButton } from "react-native-paper";
 import { StyleSheet, View } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 
 const defaultSchema = Yup.object().shape({
     name: Yup.string().required("Matn kiriting!"),
@@ -35,7 +37,7 @@ export default function CreateDebtPage() {
     useEffect(() => {
         const currentJournalVal = journalValidation[active.name];
         const schema = { name: Yup.string().required("Nom kiriting!") };
-        const value = { name: "", amount: 0, date: "", debt_type: "" };
+        const value = { name: "", amount: "", date: "", debt_type: "" };
         const formaShakli = new Set(["name", "date", "debt_type"]);
 
         if (currentJournalVal.folderable) {
@@ -92,9 +94,17 @@ export default function CreateDebtPage() {
         setValues(values);
     };
 
-    const onSubmit = (values) => {
-        Alert.alert("Forma muvaffaqiyatli yuborildi!", JSON.stringify(values));
-        // Bu yerda ma'lumotlarni qayta ishlash mumkin (API ga yuborish va h.k.)
+    const onSubmit = async (values) => {
+        try {
+            const data = { ...values, journal_id: active.id };
+            const token = await AsyncStorage.getItem("token");
+            const headers = { Authorization: `Bearer ${token}` };
+            await axios.post("http://192.168.1.2:1009/qd/v1/api/journal/debt", data, { headers });
+        } catch (error) {
+            const message = (error.response && error.response.data.error) || error.message || "Something went wrong!";
+            Alert.alert(message);
+            console.log(error);
+        }
     };
 
     return (

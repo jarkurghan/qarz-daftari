@@ -5,10 +5,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { getActiveJournal } from "../../store/activeJournal";
 import { useSelector } from "react-redux";
+import { getters } from "../../store/gettersForAPI";
 
 export default function JournalComponent() {
     const [debt, setDebt] = useState([]);
     const active = useSelector(getActiveJournal);
+    const getter = useSelector(getters);
 
     const getDebt = async () => {
         try {
@@ -22,12 +24,18 @@ export default function JournalComponent() {
 
     useEffect(() => {
         getDebt();
-    }, []);
+    }, [getter.debt]);
 
     return (
         <View style={styles.container}>
             {debt.map((el) => (
-                <Text style={styles.debt}>{el.name}</Text>
+                <View key={el.id} style={styles.debt}>
+                    <View>
+                        <Text>{el.name}</Text>
+                        <Text>{el.amount}</Text>
+                    </View>
+                    <Text>{el.date.slice(0, 10)}</Text>
+                </View>
             ))}
         </View>
     );
@@ -44,5 +52,8 @@ const styles = StyleSheet.create({
         borderBottomColor: "#ddd",
         borderBottomWidth: 2,
         padding: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
     },
 });

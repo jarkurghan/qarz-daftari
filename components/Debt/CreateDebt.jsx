@@ -5,7 +5,7 @@ import { Alert, Text, TouchableOpacity } from "react-native";
 import { getJournalValidation } from "../../store/journalValidation";
 import { getActiveJournal } from "../../store/activeJournal";
 import { TouchableWithoutFeedback } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TextInput } from "react-native";
 import { Button } from "react-native";
 import { RadioButton } from "react-native-paper";
@@ -13,6 +13,7 @@ import { StyleSheet, View } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { getDebt } from "../../store/gettersForAPI";
 
 const defaultSchema = Yup.object().shape({
     name: Yup.string().required("Matn kiriting!"),
@@ -26,7 +27,8 @@ const defaultValue = {
 const yesterday = new Date();
 yesterday.setDate(new Date().getDate() - 1);
 
-export default function CreateDebtPage() {
+export default function CreateDebtPage({ navigation }) {
+    const dispatch = useDispatch();
     const active = useSelector(getActiveJournal);
     const journalValidation = useSelector(getJournalValidation);
     const [validation, setValidation] = useState(defaultSchema);
@@ -94,18 +96,23 @@ export default function CreateDebtPage() {
         setValues(values);
     };
 
+    const [submitting, setSubmitting] = useState(false);
     const onSubmit = async (values) => {
+        setSubmitting(true);
         try {
-            // to-do: spinner
             const data = { ...values, journal_id: active.id };
             const token = await AsyncStorage.getItem("token");
             const headers = { Authorization: `Bearer ${token}` };
             await axios.post("http://192.168.1.2:1009/qd/v1/api/journal/debt", data, { headers });
+            dispatch(getDebt());
+            // 
+            navigation.navigate(active.name);
         } catch (error) {
             const message = (error.response && error.response.data.error) || error.message || "Something went wrong!";
             Alert.alert(message);
             console.log(error);
         }
+        setSubmitting(false);
     };
 
     return (
@@ -232,7 +239,7 @@ export default function CreateDebtPage() {
                                     <Text style={[styles.error, { opacity: errors.debt_type && touched.debt_type ? 1 : 0 }]}>{errors.debt_type}</Text>
                                 </React.Fragment>
                             )}
-                            <Button title="Qo'shish" onPress={handleSubmit} />
+                            <Button title="Qo'shish" onPress={handleSubmit} disabled={submitting} />
                         </View>
                     )}
                 </Formik>

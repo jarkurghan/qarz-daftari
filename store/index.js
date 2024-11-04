@@ -9,12 +9,14 @@ import visibleBottomNavigation from "./bottomnav";
 import activeJournal from "./activeJournal";
 import isAuthenticatedUser from "./isAuthenticatedUser";
 import journalValidation from "./journalValidation";
+import getters from "./gettersForAPI";
 
 export const store = configureStore({
     reducer: {
         alert,
         token,
         filter,
+        getters,
         prevFilter,
         journal,
         activeJournal,

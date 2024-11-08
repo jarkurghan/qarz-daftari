@@ -19,7 +19,7 @@ function HomeDrawerNavigator() {
     const isShowBottomNav = useSelector(getVisibleNav);
     const journals = useSelector(getJournal);
     const active = useSelector(getActiveJournal);
-    const initialRoute = active.name;
+    const initialRoute = "journal-" + active.name;
     const navigation = useNavigation();
 
     return (
@@ -60,7 +60,7 @@ function HomeDrawerNavigator() {
                     tabBarVisible: false,
                     headerRight: () => null,
                     headerLeft: () => (
-                        <TouchableOpacity onPress={() => navigation.navigate(active.name)} style={{ paddingLeft: 10 }}>
+                        <TouchableOpacity onPress={() => navigation.navigate("journal-" + active.name)} style={{ paddingLeft: 10 }}>
                             <IconIonicons name="arrow-back" size={25} color="#fff" />
                         </TouchableOpacity>
                     ),
@@ -69,11 +69,12 @@ function HomeDrawerNavigator() {
             {journals.map((journal) => (
                 <Tab.Screen
                     key={journal.name}
-                    name={journal.name}
+                    name={"journal-" + journal.name}
                     component={JournalScreen}
                     options={() => {
                         dispatch(setActiveJournal(journal));
                         return {
+                            title: journal.name,
                             tabBarIcon: ({ focused }) => (
                                 <View style={{ alignItems: "center", justifyContent: "center" }}>
                                     <IconFontAwesome5 name="clipboard-list" size={25} color="white" />

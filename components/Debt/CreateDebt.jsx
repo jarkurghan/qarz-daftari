@@ -97,7 +97,7 @@ export default function CreateDebtPage({ navigation }) {
     };
 
     const [submitting, setSubmitting] = useState(false);
-    const onSubmit = async (values) => {
+    const onSubmit = async (values, { resetForm, setTouched }) => {
         setSubmitting(true);
         try {
             const data = { ...values, journal_id: active.id };
@@ -105,7 +105,8 @@ export default function CreateDebtPage({ navigation }) {
             const headers = { Authorization: `Bearer ${token}` };
             await axios.post("http://192.168.1.2:1009/qd/v1/api/journal/debt", data, { headers });
             dispatch(getDebt());
-            // 
+            resetForm();
+            setTouched(false);
             navigation.navigate(active.name);
         } catch (error) {
             const message = (error.response && error.response.data.error) || error.message || "Something went wrong!";

@@ -31,7 +31,7 @@ function ProfileStackNavigator() {
                         headerStyle: { backgroundColor: "rgb(51, 158, 255)" },
                         headerTintColor: "#ffffff",
                         headerLeft: () => (
-                            <TouchableOpacity onPress={() => navigation.navigate(active.name)} style={{ paddingLeft: 10 }}>
+                            <TouchableOpacity onPress={() => navigation.navigate("journal-" + active.name)} style={{ paddingLeft: 10 }}>
                                 <IconIonicons name="arrow-back" size={25} color="#fff" />
                             </TouchableOpacity>
                         ),

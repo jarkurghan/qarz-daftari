@@ -25,7 +25,7 @@ export default function SignUpForm() {
         await axios
             .post(`http://142.93.128.235:7834/api/hdp/mob/signup`, { firstName, lastName, email, phone, login, password })
             .then(async (res) => {
-                await AsyncStorage.setItem("token", res?.data?.data);
+                await AsyncStorage.setItem("qddev-token", res?.data?.data);
                 dispatch(closeAlert());
             })
             .catch((err) => {

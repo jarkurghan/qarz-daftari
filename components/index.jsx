@@ -20,10 +20,10 @@ export default function App() {
 
     const checkToken = async () => {
         try {
-            const value = await AsyncStorage.getItem("token");
+            const value = await AsyncStorage.getItem("qddev-token");
             if (value) {
                 const res = await axios.get("http://192.168.1.2:1009/qd/v1/api/auth/access", { headers: { Authorization: `Bearer ${value}` } });
-                await AsyncStorage.setItem("token", res.data.token);
+                await AsyncStorage.setItem("qddev-token", res.data.token);
                 dispatch(setToken(res.data.token));
                 dispatch(setIsAuthenticatedUser(res.data.authenticatedUser));
                 dispatch(setActiveJournal(res.data.journals[0]));
@@ -32,7 +32,7 @@ export default function App() {
                 await getValidators(res.data.journals, res.data.token, dispatch);
             } else {
                 const res = await axios.post("http://192.168.1.2:1009/qd/v1/api/auth/create-account", {});
-                await AsyncStorage.setItem("token", res.data.token);
+                await AsyncStorage.setItem("qddev-token", res.data.token);
                 dispatch(setToken(res.data.token));
                 dispatch(setActiveJournal(res.data.journals[0]));
                 if (res.data.journals.length < 2) dispatch(hideNav());

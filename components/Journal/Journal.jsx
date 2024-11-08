@@ -10,11 +10,11 @@ import { getters } from "../../store/gettersForAPI";
 export default function JournalComponent() {
     const [debt, setDebt] = useState([]);
     const active = useSelector(getActiveJournal);
-    const getter = useSelector(getters);
+    const getter = useSelector(getters); 
 
     const getDebt = async () => {
         try {
-            const value = await AsyncStorage.getItem("token");
+            const value = await AsyncStorage.getItem("qddev-token"); 
             const res = await axios.get(`http://192.168.1.2:1009/qd/v1/api/journal/${active.id}/debt`, { headers: { Authorization: `Bearer ${value}` } });
             setDebt(res.data);
         } catch (error) {
@@ -44,7 +44,7 @@ export default function JournalComponent() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingBottom: 60,
+        paddingBottom: 30,
         backgroundColor: "#CED5E0",
     },
     debt: {

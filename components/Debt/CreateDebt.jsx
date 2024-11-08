@@ -101,13 +101,15 @@ export default function CreateDebtPage({ navigation }) {
         setSubmitting(true);
         try {
             const data = { ...values, journal_id: active.id };
-            const token = await AsyncStorage.getItem("token");
+            const token = await AsyncStorage.getItem("qddev-token");
             const headers = { Authorization: `Bearer ${token}` };
             await axios.post("http://192.168.1.2:1009/qd/v1/api/journal/debt", data, { headers });
             dispatch(getDebt());
             resetForm();
-            setTouched(false);
-            navigation.navigate(active.name);
+            const touch = { ...initialValue };
+            Object.keys(touch).forEach((key) => (touch[key] = false));
+            setTouched(touch);
+            navigation.navigate("journal-" + active.name);
         } catch (error) {
             const message = (error.response && error.response.data.error) || error.message || "Something went wrong!";
             Alert.alert(message);

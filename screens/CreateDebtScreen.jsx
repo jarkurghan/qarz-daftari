@@ -1,5 +1,5 @@
 import React from "react";
-import CreateDebtPage from "../components/Debt/CreateDebt";
+import CreateDebtPage from "../components/Journal/DebtCreate";
 import { ScrollView } from "react-native";
 
 function CreateDebtScreen({ navigation }) {

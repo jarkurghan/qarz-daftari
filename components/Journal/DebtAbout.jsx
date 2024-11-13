@@ -15,7 +15,7 @@ export default function JournalComponent() {
     const getDebt = async () => {
         try {
             const value = await AsyncStorage.getItem("qddev-token");
-            const res = await axios.get(`http://192.168.1.2:1009/qd/v1/api/journal/${active.id}/debt`, { headers: { Authorization: `Bearer ${value}` } });
+            const res = await axios.get(`http://192.168.1.2:1009/qd/v1/api/journal/debt`, { headers: { Authorization: `Bearer ${value}` } });
             setDebt(res.data);
         } catch (error) {
             console.log(error);

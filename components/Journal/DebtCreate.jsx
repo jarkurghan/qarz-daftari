@@ -21,7 +21,6 @@ const defaultSchema = Yup.object().shape({
 const defaultValue = {
     name: undefined,
     amount: undefined,
-    date: undefined,
     debt_type: undefined,
 };
 const yesterday = new Date();
@@ -39,8 +38,8 @@ export default function CreateDebtPage({ navigation }) {
     useEffect(() => {
         const currentJournalVal = journalValidation[active.name];
         const schema = { name: Yup.string().required("Nom kiriting!") };
-        const value = { name: "", amount: "", date: "", debt_type: "" };
-        const formaShakli = new Set(["name", "date", "debt_type"]);
+        const value = { name: "", amount: "",  debt_type: "" };
+        const formaShakli = new Set(["name", "debt_type"]);
 
         if (currentJournalVal.folderable) {
             schema.folder = Yup.string().optional();
@@ -68,8 +67,8 @@ export default function CreateDebtPage({ navigation }) {
             }
         }
 
-        if (currentJournalVal.date_required) schema.date = Yup.string().required("Qaytarish vaqtini kitiring!");
-        else schema.date = Yup.string().optional();
+        // if (currentJournalVal.date_required) schema.date = Yup.string().required("Qaytarish vaqtini kitiring!");
+        // else schema.date = Yup.string().optional();
 
         if (currentJournalVal.addressable) {
             formaShakli.add("address");
